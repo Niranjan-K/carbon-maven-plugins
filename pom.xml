@@ -54,11 +54,6 @@
                 <version>${org.apache.maven.core.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>tycho-p2-facade</artifactId>
-                <version>${tycho.p2.facade.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-project</artifactId>
                 <version>${org.apache.maven.project.version}</version>
@@ -77,21 +72,59 @@
             <dependency>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>sisu-equinox-launching</artifactId>
-                <version>${sisu.equinox.launching.version}</version>
+                <version>${tycho.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-p2-director-plugin</artifactId>
+                <version>${tycho.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-core</artifactId>
+                <version>${tycho.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.common</artifactId>
+                <version>${org.eclipse.equinox.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.engine</artifactId>
+                <version>${org.eclipse.equinox.p2.engine.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.core.runtime</artifactId>
+                <version>${org.eclipse.core.runtime.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.touchpoint.eclipse</artifactId>
+                <version>${org.eclipse.equinox.p2.touchpoint.eclipse.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
     <properties>
+        <carbon.maven.plugins.version>2.1.0-SNAPSHOT</carbon.maven.plugins.version>
         <org.apache.maven.core.version>3.0</org.apache.maven.core.version>
         <org.apache.maven.plugin.api.version>3.0</org.apache.maven.plugin.api.version>
-        <tycho.p2.facade.version>0.23.1</tycho.p2.facade.version>
-        <sisu.equinox.launching.version>0.23.1</sisu.equinox.launching.version>
-        <tycho-version>0.23.1</tycho-version>
         <org.apache.maven.project.version>2.2.1</org.apache.maven.project.version>
         <junit.version>3.8.1</junit.version>
         <maven.plugin.plugin.version>3.4</maven.plugin.plugin.version>
         <maven.plugin.annotation.version>3.3</maven.plugin.annotation.version>
+        <tycho.version>0.25.0</tycho.version>
+
+        <org.eclipse.core.runtime.version>3.10.0.v20140318-2214</org.eclipse.core.runtime.version>
+        <org.eclipse.equinox.p2.touchpoint.eclipse.version>2.1.200.v20140512-1650</org.eclipse.equinox.p2.touchpoint.eclipse.version>
+        <org.eclipse.equinox.p2.engine.version>2.3.0.v20140506-1720</org.eclipse.equinox.p2.engine.version>
+        <org.eclipse.equinox.common.version>3.7.0.v20150402-1709</org.eclipse.equinox.common.version>
+
     </properties>
 
     <build>
@@ -101,6 +134,18 @@
                 <artifactId>wagon-ssh</artifactId>
             </extension>
         </extensions>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>${maven.plugin.plugin.version}</version>
+                    <extensions>true</extensions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
