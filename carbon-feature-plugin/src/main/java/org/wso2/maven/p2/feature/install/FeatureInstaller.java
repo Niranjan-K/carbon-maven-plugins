@@ -19,9 +19,8 @@ package org.wso2.maven.p2.feature.install;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
 import org.wso2.maven.p2.utils.FileManagementUtil;
-import org.wso2.maven.p2.utils.P2ApplicationLaunchManager;
+import org.wso2.maven.p2.utils.StandaloneDirectorRuntimeManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,9 +38,7 @@ import java.nio.file.Paths;
 public class FeatureInstaller {
 
     private final FeatureInstallResourceBundle resourceBundle;
-    private final MavenProject project;
     private final String destination;
-    private static final String PUBLISHER_APPLICATION = "org.eclipse.equinox.p2.director";
     private static final String DEFAULT_ENCODING = "UTF-8";
 
     private Log log;
@@ -54,7 +51,6 @@ public class FeatureInstaller {
     public FeatureInstaller(FeatureInstallResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         this.log = resourceBundle.getLog();
-        this.project = resourceBundle.getProject();
         this.destination = resourceBundle.getDestination();
     }
 
@@ -93,12 +89,10 @@ public class FeatureInstaller {
     private void installFeatures() throws MojoFailureException {
         String installIUs = extractIUsToInstall();
         this.log.info("Running Equinox P2 Director Application");
-        P2ApplicationLaunchManager launcher = new P2ApplicationLaunchManager(resourceBundle.getLauncher());
-        launcher.setWorkingDirectory(project.getBasedir());
-        launcher.setApplicationName(PUBLISHER_APPLICATION);
+        StandaloneDirectorRuntimeManager launcher = new StandaloneDirectorRuntimeManager(resourceBundle.getLauncher());
+        launcher.setRuntimeLocation(resourceBundle.getRuntimeLocation());
         launcher.addArgumentsToInstallFeatures(resourceBundle.getRepository().toExternalForm(),
-                installIUs, destination,
-                resourceBundle.getProfile());
+                installIUs, destination, resourceBundle.getProfile());
         launcher.performAction(resourceBundle.getForkedProcessTimeoutInSeconds());
     }
 
