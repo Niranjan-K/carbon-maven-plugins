@@ -20,7 +20,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.wso2.maven.p2.utils.FileManagementUtil;
-import org.wso2.maven.p2.utils.StandaloneDirectorRuntimeManager;
+import org.wso2.maven.p2.utils.StandaloneManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -89,7 +89,7 @@ public class FeatureInstaller {
     private void installFeatures() throws MojoFailureException {
         String installIUs = extractIUsToInstall();
         this.log.info("Running Equinox P2 Director Application");
-        StandaloneDirectorRuntimeManager launcher = new StandaloneDirectorRuntimeManager(resourceBundle.getLauncher());
+        StandaloneManager launcher = new StandaloneManager(resourceBundle.getLauncher());
         launcher.setRuntimeLocation(resourceBundle.getRuntimeLocation());
         launcher.addArgumentsToInstallFeatures(resourceBundle.getRepository().toExternalForm(),
                 installIUs, destination, resourceBundle.getProfile());

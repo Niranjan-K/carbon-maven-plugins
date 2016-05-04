@@ -29,7 +29,7 @@ import java.util.List;
  * Eclipse installations using the p2 director application. This director runtime can install products with
  * meta-requirements, e.g. for custom touchpoint actions
  */
-public class StandaloneDirectorRuntimeManager {
+public class StandaloneManager {
 
     private final EquinoxLauncher launcher;
     private File runtimeLocation;
@@ -37,7 +37,7 @@ public class StandaloneDirectorRuntimeManager {
 
     private static final String PUBLISHER_APPLICATION = "org.eclipse.equinox.p2.director";
 
-    public StandaloneDirectorRuntimeManager(EquinoxLauncher launcher) {
+    public StandaloneManager(EquinoxLauncher launcher) {
         this.launcher = launcher;
         programArguments = new ArrayList<>();
     }
