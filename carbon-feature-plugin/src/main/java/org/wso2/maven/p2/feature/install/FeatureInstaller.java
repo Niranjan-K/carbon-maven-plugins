@@ -29,7 +29,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.file.Paths;
-import java.util.List;
 
 /**
  * FeatureInstaller takes parameters from the pom.xml and generates the profile.
@@ -91,11 +90,11 @@ public class FeatureInstaller {
         this.log.info("Running Equinox P2 Director Application");
         StandaloneManager launcher = new StandaloneManager(resourceBundle.getLauncher());
         launcher.setRuntimeLocation(resourceBundle.getRuntimeLocation());
-        List<String> programArguments = launcher.addArgumentsToInstallFeatures(resourceBundle.getRepository()
-                .toExternalForm(), destination, resourceBundle.getProfile());
+        launcher.addArgumentsToInstallFeatures(resourceBundle.getRepository().toExternalForm(), destination,
+                resourceBundle.getProfile());
         for (Feature feature: resourceBundle.getFeatures()) {
             String installFeature = feature.getId().trim().concat("/").concat(feature.getVersion().trim());
-            launcher.performAction(programArguments, installFeature, resourceBundle.getForkedProcessTimeoutInSeconds());
+            launcher.performAction(installFeature, resourceBundle.getForkedProcessTimeoutInSeconds());
         }
     }
 
