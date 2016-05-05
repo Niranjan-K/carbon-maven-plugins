@@ -33,13 +33,10 @@ public class StandaloneManager {
 
     private final EquinoxLauncher launcher;
     private File runtimeLocation;
-    private List<String> programArguments;
-
     private static final String PUBLISHER_APPLICATION = "org.eclipse.equinox.p2.director";
 
     public StandaloneManager(EquinoxLauncher launcher) {
         this.launcher = launcher;
-        programArguments = new ArrayList<>();
     }
 
     public void setRuntimeLocation(File runtimeLocation) {
@@ -54,10 +51,6 @@ public class StandaloneManager {
      *                           metadata and artifacts resides in the same repo) URLs where the software
      *                           to be
      *                           installed can be found.
-     * @param installIUs         a comma separated list of UIs to install. Each entry in the list is in
-     *                           the form
-     *                           {@code <id> [ '/' <version> ]}. If you are looking to install a feature,
-     *                           the identifier
      *                           of the feature has to be suffixed with ".feature.group".
      * @param destination        the path of a folder in which the targeted product is located.
      * @param profile            the profile id containing the description of the targeted product. This
@@ -65,19 +58,17 @@ public class StandaloneManager {
      *                           defined by the eclipse.p2.profile property contained in the config.ini of the
      *                           targeted product.
      */
-    public void addArgumentsToInstallFeatures(String repositoryLocation, String installIUs, String destination,
-                                              String profile) {
+    public List<String> addArgumentsToInstallFeatures(String repositoryLocation, String destination, String profile) {
 
+        List<String> programArguments = new ArrayList<>();
+        programArguments.add("-application");
+        programArguments.add(PUBLISHER_APPLICATION);
         programArguments.add("-metadataRepository");
         programArguments.add(repositoryLocation);
         programArguments.add("-artifactRepository");
         programArguments.add(repositoryLocation);
-        programArguments.add("-installIU");
-        programArguments.add(installIUs);
         programArguments.add("-destination");
         programArguments.add(destination + File.separator + profile);
-
-        //ToDo : Verify this!
         programArguments.add("-bundlepool");
         programArguments.add(destination);
         programArguments.add("-shared");
@@ -90,18 +81,22 @@ public class StandaloneManager {
         programArguments.add("-roaming");
 
         //ToDo : Need to check Environment and set the environment variables
-
+        return programArguments;
     }
 
     /**
      * Calls the Eclipse Launcher to perform the action such as install the set of features.
      *
+     * @param programArguments  arguments that is passed to the executor.
+     * @param installIU         UI to be installed.
      * @param forkedProcessTimeoutInSeconds int
      * @throws MojoFailureException throws when unable to perform the p2 activity
      */
-    public void performAction(int forkedProcessTimeoutInSeconds) throws MojoFailureException {
-        programArguments.add("-application");
-        programArguments.add(PUBLISHER_APPLICATION);
+    public void performAction(List<String> programArguments, String installIU, int forkedProcessTimeoutInSeconds) throws
+            MojoFailureException {
+
+        programArguments.add("-installIU");
+        programArguments.add(installIU);
         LaunchConfiguration launch = new EquinoxInstallationLaunchConfiguration(runtimeLocation, programArguments);
 
         int result = launcher.execute(launch, forkedProcessTimeoutInSeconds);

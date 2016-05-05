@@ -29,6 +29,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * FeatureInstaller takes parameters from the pom.xml and generates the profile.
@@ -87,27 +88,15 @@ public class FeatureInstaller {
      * @throws MojoFailureException throws when the director application fail to install any given feature.
      */
     private void installFeatures() throws MojoFailureException {
-        String installIUs = extractIUsToInstall();
         this.log.info("Running Equinox P2 Director Application");
         StandaloneManager launcher = new StandaloneManager(resourceBundle.getLauncher());
         launcher.setRuntimeLocation(resourceBundle.getRuntimeLocation());
-        launcher.addArgumentsToInstallFeatures(resourceBundle.getRepository().toExternalForm(),
-                installIUs, destination, resourceBundle.getProfile());
-        launcher.performAction(resourceBundle.getForkedProcessTimeoutInSeconds());
-    }
-
-    /**
-     * Generate the formatted string representation of features from the features passed in through the pom.xml. This
-     * formatted string is passed into P2ApplicationLauncher to generate the profile.
-     *
-     * @return formatted string to pass into P2ApplicationLauncher
-     */
-    private String extractIUsToInstall() {
-        StringBuilder installIUs = new StringBuilder();
-        resourceBundle.getFeatures().forEach(feature ->
-                installIUs.append(feature.getId().trim()).append("/").append(feature.getVersion().trim()).append(","));
-
-        return installIUs.toString();
+        List<String> programArguments = launcher.addArgumentsToInstallFeatures(resourceBundle.getRepository()
+                .toExternalForm(), destination, resourceBundle.getProfile());
+        for (Feature feature: resourceBundle.getFeatures()) {
+            String installFeature = feature.getId().trim().concat("/").concat(feature.getVersion().trim());
+            launcher.performAction(programArguments, installFeature, resourceBundle.getForkedProcessTimeoutInSeconds());
+        }
     }
 
     /**
